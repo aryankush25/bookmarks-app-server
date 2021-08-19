@@ -1,6 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { In } from 'typeorm';
-import * as R from 'ramda';
 import { ArgumentsDoesNotExistError, UserDoesNotExistError } from '../errors';
 import UserRepository from '../repository/UserRepository';
 import { isNilOrEmpty } from '../utils/helpers';

@@ -13,10 +13,14 @@ export class Folder {
   @ManyToOne(() => User, (user) => user.folders)
   user: User;
 
-  @ManyToOne((type) => Folder, (folder) => folder.children)
+  @ManyToOne((type) => Folder, (folder) => folder.children, {
+    onDelete: 'CASCADE',
+  })
   parent: Folder;
 
-  @OneToMany((type) => Folder, (folder) => folder.parent)
+  @OneToMany((type) => Folder, (folder) => folder.parent, {
+    cascade: true,
+  })
   children: Folder[];
 
   @OneToMany((type) => Bookmark, (bookmark) => bookmark.folder)
