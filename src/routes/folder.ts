@@ -26,6 +26,12 @@ const userRoutes: RoutesPayload[] = [
     controller: FolderController,
     action: 'renameFolder',
   },
+  {
+    method: 'patch',
+    route: '/move-folder',
+    controller: FolderController,
+    action: 'moveFolder',
+  },
 ];
 
 export default userRoutes;

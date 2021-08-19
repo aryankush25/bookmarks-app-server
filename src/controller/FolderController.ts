@@ -82,19 +82,54 @@ export class FolderController {
   async renameFolder(request: Request, response: Response, next: NextFunction) {
     try {
       const { folderId, name } = request.body;
-      let folderToRename: Folder = null;
 
-      if (isPresent(folderId)) {
-        folderToRename = await this.folderRepository.getFolder(folderId);
+      if (isNilOrEmpty(folderId)) {
+        throw ArgumentsDoesNotExistError();
+      }
 
-        if (folderToRename.user.id !== response.locals.user.id) {
-          throw ArgumentsDoesNotExistError();
-        }
+      const folderToRename: Folder = await this.folderRepository.getFolder(folderId);
+
+      if (folderToRename.user.id !== response.locals.user.id) {
+        throw ArgumentsDoesNotExistError();
       }
 
       return this.folderRepository.updateFolder({
         searchProps: folderToRename,
         updatedValues: { name },
+      });
+    } catch (error) {
+      console.log(error);
+      return next(error);
+    }
+  }
+
+  async moveFolder(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { folderId, moveTo } = request.body;
+
+      if (isNilOrEmpty(folderId) || isNilOrEmpty(moveTo)) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      const currentFolder: Folder = await this.folderRepository.getFolder(folderId);
+
+      if (currentFolder.user.id !== response.locals.user.id) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      let moveToFolder: Folder = null;
+
+      if (moveTo !== 'root') {
+        moveToFolder = await this.folderRepository.getFolder(moveTo);
+
+        if (moveToFolder.user.id !== response.locals.user.id) {
+          throw ArgumentsDoesNotExistError();
+        }
+      }
+
+      return this.folderRepository.updateFolder({
+        searchProps: currentFolder,
+        updatedValues: { parent: moveToFolder },
       });
     } catch (error) {
       console.log(error);
