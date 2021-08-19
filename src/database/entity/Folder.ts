@@ -1,30 +1,25 @@
-import { Entity, PrimaryColumn, Column, BeforeUpdate, OneToMany } from 'typeorm';
+import { Entity, PrimaryColumn, Column, BeforeUpdate, ManyToOne, OneToMany } from 'typeorm';
 import { Bookmark } from './Bookmark';
-import { Folder } from './Folder';
+import { User } from './User';
 
 @Entity()
-export class User {
+export class Folder {
   @PrimaryColumn()
   id: string;
 
   @Column('text')
   name: string;
 
-  @Column('text', {
-    unique: true,
-  })
-  email: string;
+  @ManyToOne(() => User, (user) => user.folders)
+  user: User;
 
-  @Column({ default: false })
-  isEmailVerified: boolean;
+  @ManyToOne((type) => Folder, (folder) => folder.children)
+  parent: Folder;
 
-  @Column()
-  hashedPassword: string;
+  @OneToMany((type) => Folder, (folder) => folder.parent)
+  children: Folder[];
 
-  @OneToMany((type) => Folder, (folder) => folder.user)
-  folders: Folder[];
-
-  @OneToMany((type) => Bookmark, (bookmark) => bookmark.user)
+  @OneToMany((type) => Bookmark, (bookmark) => bookmark.folder)
   bookmarks: Bookmark[];
 
   @Column({ type: 'timestamp' })
