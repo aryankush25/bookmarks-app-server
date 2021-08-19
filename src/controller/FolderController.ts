@@ -46,7 +46,7 @@ export class FolderController {
         throw ArgumentsDoesNotExistError();
       }
 
-      const folderToDelete = await this.folderRepository.getFolder(folderId, { relations: ['user'] });
+      const folderToDelete = await this.folderRepository.getFolder(folderId);
 
       if (folderToDelete.user.id !== response.locals.user.id) {
         throw ArgumentsDoesNotExistError();
@@ -58,44 +58,47 @@ export class FolderController {
     }
   }
 
-  // async login(request: Request, response: Response, next: NextFunction) {
-  //   try {
-  //     const { email, password } = request.body;
+  async getMyFolders(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { folderId } = request.body;
+      let parent: Folder = null;
 
-  //     if (isNilOrEmpty(email) || isNilOrEmpty(password)) {
-  //       throw ArgumentsDoesNotExistError();
-  //     }
+      if (isPresent(folderId)) {
+        parent = await this.folderRepository.getFolder(folderId);
 
-  //     const isValidUser = await this.folderRepository.validatePassword(email, password);
+        if (parent.user.id !== response.locals.user.id) {
+          throw ArgumentsDoesNotExistError();
+        }
+      }
 
-  //     if (!isValidUser) {
-  //       throw UserDoesNotExistError();
-  //     }
+      return this.folderRepository.getFolders({
+        where: { user: response.locals.user, parent },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 
-  //     const user = await this.folderRepository.getUser({ where: { email } });
+  async renameFolder(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { folderId, name } = request.body;
+      let folderToRename: Folder = null;
 
-  //     return {
-  //       ...user,
-  //       token: this.folderRepository.generateJWT(user.id, user.email),
-  //     };
-  //   } catch (error) {
-  //     return next(error);
-  //   }
-  // }
+      if (isPresent(folderId)) {
+        folderToRename = await this.folderRepository.getFolder(folderId);
 
-  // async me(request: Request, response: Response, next: NextFunction) {
-  //   try {
-  //     return response.locals.user;
-  //   } catch (error) {
-  //     return next(error);
-  //   }
-  // }
+        if (folderToRename.user.id !== response.locals.user.id) {
+          throw ArgumentsDoesNotExistError();
+        }
+      }
 
-  // async getAllUsers(request: Request, response: Response, next: NextFunction) {
-  //   try {
-  //     return this.folderRepository.getUsers();
-  //   } catch (error) {
-  //     return next(error);
-  //   }
-  // }
+      return this.folderRepository.updateFolder({
+        searchProps: folderToRename,
+        updatedValues: { name },
+      });
+    } catch (error) {
+      console.log(error);
+      return next(error);
+    }
+  }
 }

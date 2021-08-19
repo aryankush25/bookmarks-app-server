@@ -14,18 +14,17 @@ const userRoutes: RoutesPayload[] = [
     controller: FolderController,
     action: 'deleteFolder',
   },
-
-  {
-    method: 'get',
-    route: '/my-folders',
-    controller: FolderController,
-    action: 'getMyFolders',
-  },
   {
     method: 'get',
     route: '/folders',
     controller: FolderController,
     action: 'getMyFolders',
+  },
+  {
+    method: 'put',
+    route: '/rename-folder',
+    controller: FolderController,
+    action: 'renameFolder',
   },
 ];
 

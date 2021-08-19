@@ -25,7 +25,10 @@ class FolderRepository {
   }
 
   async getFolder(props: Object = {}, options: Object = {}) {
-    const folder = await this.folderRepository.findOne(props, options);
+    const folder = await this.folderRepository.findOne(props, {
+      relations: ['user'],
+      ...options,
+    });
 
     return folder;
   }
