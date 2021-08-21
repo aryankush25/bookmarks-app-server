@@ -22,10 +22,10 @@ export class Bookmark {
   @Column({ default: false })
   isFavorite: boolean;
 
-  @Column('text')
+  @Column({type: 'text', nullable: true })
   description: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   imageUrl: string;
 
   @Column({ type: 'timestamp' })

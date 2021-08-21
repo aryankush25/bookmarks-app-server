@@ -1,5 +1,6 @@
 import userRoutes from './user';
 import folderRoutes from './folder';
+import bookmarkRoutes from './bookmark';
 import { UserController } from '../controller/UserController';
 import { FolderController } from '../controller/FolderController';
 import { BookmarkController } from '../controller/BookmarkController';
@@ -12,4 +13,4 @@ export interface RoutesPayload {
   openAuth?: boolean;
 }
 
-export const Routes: RoutesPayload[] = [...userRoutes, ...folderRoutes];
+export const Routes: RoutesPayload[] = [...userRoutes, ...folderRoutes, ...bookmarkRoutes];

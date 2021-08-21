@@ -21,16 +21,22 @@ const bookmarkRoutes: RoutesPayload[] = [
     action: 'getMyBookmarks',
   },
   {
-    method: 'put',
-    route: '/rename-bookmark',
-    controller: BookmarkController,
-    action: 'renameBookmark',
-  },
-  {
     method: 'patch',
     route: '/move-bookmark',
     controller: BookmarkController,
     action: 'moveBookmark',
+  },
+  {
+    method: 'put',
+    route: '/toggle-favorite',
+    controller: BookmarkController,
+    action: 'toggleFavorites',
+  },
+  {
+    method: 'put',
+    route: '/update-details',
+    controller: BookmarkController,
+    action: 'changeDetails',
   },
 ];
 

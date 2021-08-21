@@ -10,6 +10,8 @@ export class UserController {
     try {
       const { name, email, password } = request.body;
 
+      console.log(request.body, 'body');
+
       if (isNilOrEmpty(email) || isNilOrEmpty(name) || isNilOrEmpty(password)) {
         throw ArgumentsDoesNotExistError();
       }

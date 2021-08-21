@@ -100,9 +100,9 @@ export class BookmarkController {
         }
       }
 
-      this.bookmarkRepository.updateBookmark({
+      return this.bookmarkRepository.updateBookmark({
         searchProps: bookmark,
-        updatedValues: { parent: folder },
+        updatedValues: { folder },
       })
     } catch (error) {
       return next(error);
@@ -118,7 +118,7 @@ export class BookmarkController {
         throw ArgumentsDoesNotExistError();
       }
 
-      this.bookmarkRepository.updateBookmark({
+      return this.bookmarkRepository.updateBookmark({
         searchProps: bookmark,
         updatedValues: { name, url },
       })
@@ -129,7 +129,7 @@ export class BookmarkController {
 
   async toggleFavorites(request: Request, response: Response, next: NextFunction) {
     try {
-      const { bookmarkId, name, url } = request.body;
+      const { bookmarkId } = request.body;
       let bookmark: Bookmark = await this.bookmarkRepository.getBookmark(bookmarkId);
 
       let isFavorite: boolean = bookmark.isFavorite ? false : true;
@@ -138,7 +138,7 @@ export class BookmarkController {
         throw ArgumentsDoesNotExistError();
       }
 
-      this.bookmarkRepository.updateBookmark({
+      return this.bookmarkRepository.updateBookmark({
         searchProps: bookmark,
         updatedValues: { isFavorite },
       })
