@@ -16,7 +16,7 @@ const bookmarkRoutes: RoutesPayload[] = [
   },
   {
     method: 'get',
-    route: '/bookmark',
+    route: '/folder-bookmarks',
     controller: BookmarkController,
     action: 'getMyBookmarks',
   },
