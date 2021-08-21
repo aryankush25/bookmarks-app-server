@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { Bookmark } from '../database/entity/Bookmark';
 import { Folder } from '../database/entity/Folder';
@@ -11,7 +11,6 @@ interface UpdateFolderPayload {
 
 class FolderRepository {
   private bookmarkRepository = getRepository(Bookmark);
-  private manager = getManager();
 
   async createBookmark(user: User, folder: Folder, url: string, name: string, description: string, imageUrl: string) {
     const bookmark = await this.bookmarkRepository.save({
