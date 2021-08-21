@@ -130,10 +130,6 @@ export class BookmarkController {
       const description = metadataResponse.description;
       const imageUrl = metadataResponse.image;
 
-      if (isNilOrEmpty(name)) {
-        name = metadataResponse.title;
-      }
-
       if (bookmark.user.id !== response.locals.user.id) {
         throw ArgumentsDoesNotExistError();
       }
