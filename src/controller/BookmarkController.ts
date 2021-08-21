@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import urlMetadata from 'url-metadata';
 import { Bookmark } from '../database/entity/Bookmark';
 import { Folder } from '../database/entity/Folder';
 import { ArgumentsDoesNotExistError, UserDoesNotExistError } from '../errors';
@@ -12,9 +13,19 @@ export class BookmarkController {
 
   async createBookmark(request: Request, response: Response, next: NextFunction) {
     try {
-      const { folderId, url, name} = request.body;
+      let { folderId, url, name} = request.body;
 
-      if (isNilOrEmpty(url) || isNilOrEmpty(name)) {
+      const metadataResponse = await urlMetadata(url);
+
+      const description = metadataResponse.description;
+      const imageUrl = metadataResponse.image;
+
+      if (isNilOrEmpty(name)) {
+        name = metadataResponse.title;
+      }
+
+
+      if (isNilOrEmpty(url)) {
         throw ArgumentsDoesNotExistError();
       }
 
@@ -32,7 +43,7 @@ export class BookmarkController {
         }
       }
 
-      const bookmark = await this.bookmarkRepository.createBookmark(response.locals.user, folder, url, name);
+      const bookmark = await this.bookmarkRepository.createBookmark(response.locals.user, folder, url, name, description, imageUrl);
 
       return bookmark;
     } catch (error) {
@@ -111,8 +122,17 @@ export class BookmarkController {
 
   async changeDetails(request: Request, response: Response, next: NextFunction) {
     try {
-      const { bookmarkId, name, url } = request.body;
+      let { bookmarkId, name, url } = request.body;
       let bookmark: Bookmark = await this.bookmarkRepository.getBookmark(bookmarkId);
+
+      const metadataResponse = await urlMetadata(url);
+
+      const description = metadataResponse.description;
+      const imageUrl = metadataResponse.image;
+
+      if (isNilOrEmpty(name)) {
+        name = metadataResponse.title;
+      }
 
       if (bookmark.user.id !== response.locals.user.id) {
         throw ArgumentsDoesNotExistError();
@@ -120,7 +140,7 @@ export class BookmarkController {
 
       return this.bookmarkRepository.updateBookmark({
         searchProps: bookmark,
-        updatedValues: { name, url },
+        updatedValues: { name, url, description, imageUrl },
       })
     } catch (error) {
       return next(error);
@@ -147,5 +167,3 @@ export class BookmarkController {
     }
   }
 }
-
-// move, changeDetails, toggleFavorites

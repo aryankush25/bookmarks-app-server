@@ -13,13 +13,15 @@ class FolderRepository {
   private bookmarkRepository = getRepository(Bookmark);
   private manager = getManager();
 
-  async createBookmark(user: User, folder: Folder, url: string, name: string) {
+  async createBookmark(user: User, folder: Folder, url: string, name: string, description: string, imageUrl: string) {
     const bookmark = await this.bookmarkRepository.save({
       id: v4(),
       user,
       folder,
       url,
       name,
+      description,
+      imageUrl,
       createdAt: new Date().toISOString(),
     });
 
