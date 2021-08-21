@@ -50,8 +50,6 @@ createConnection()
 
     app.use(handleErrors);
 
-    
-
     // start express server
     server.listen(port, () => {
       console.log(chalk.keyword('green').bold('Server is up at -> ' + `http://localhost:${port}/`));
