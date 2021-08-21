@@ -23,7 +23,9 @@ export class Folder {
   })
   children: Folder[];
 
-  @OneToMany((type) => Bookmark, (bookmark) => bookmark.folder)
+  @OneToMany((type) => Bookmark, (bookmark) => bookmark.folder, {
+    cascade: true,
+  })
   bookmarks: Bookmark[];
 
   @Column({ type: 'timestamp' })
