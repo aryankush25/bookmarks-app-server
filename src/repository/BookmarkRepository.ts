@@ -29,10 +29,7 @@ class FolderRepository {
   }
 
   async getBookmark(props: Object = {}, options: Object = {}) {
-    const bookmark = await this.bookmarkRepository.findOne(props, {
-      relations: ['user', 'folder'],
-      ...options,
-    });
+    const bookmark = await this.bookmarkRepository.findOne(props, options);
 
     return bookmark;
   }
