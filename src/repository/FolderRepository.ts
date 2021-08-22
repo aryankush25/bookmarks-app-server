@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { Folder } from '../database/entity/Folder';
 import { User } from '../database/entity/User';
@@ -10,7 +10,6 @@ interface UpdateFolderPayload {
 
 class FolderRepository {
   private folderRepository = getRepository(Folder);
-  private manager = getManager();
 
   async createFolder(name: string, user: User, parent: Folder) {
     const folder = await this.folderRepository.save({

@@ -3,6 +3,8 @@ import CryptoJS from 'crypto-js';
 import jwt from 'jsonwebtoken';
 import { v4 } from 'uuid';
 import { User } from '../database/entity/User';
+import { isNilOrEmpty } from '../utils/helpers';
+import { UserDoesNotExistError } from '../errors';
 
 const SECRET = 'secret';
 
@@ -67,6 +69,10 @@ class UserRepository {
 
   async validatePassword(email: string, password: string) {
     const user = await this.userRepository.findOne({ where: { email } });
+
+    if (isNilOrEmpty(user)) {
+      throw UserDoesNotExistError();
+    }
 
     var bytes = CryptoJS.AES.decrypt(user.hashedPassword, SECRET);
     var originalText = bytes.toString(CryptoJS.enc.Utf8);

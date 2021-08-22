@@ -9,6 +9,8 @@ export const routeNotFound = (req: Request, res: Response, next: NextFunction) =
 };
 
 export const handleErrors = (err: ResponseError, req: Request, res: Response, next: NextFunction) => {
+  console.log('Error', err);
+
   if (err.status || err.statusCode) {
     res.status(err.statusCode).json({
       error: err,
