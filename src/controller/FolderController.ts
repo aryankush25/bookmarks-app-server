@@ -60,7 +60,7 @@ export class FolderController {
 
   async getMyFolders(request: Request, response: Response, next: NextFunction) {
     try {
-      const { folderId } = request.params;
+      const { folderId } = request.query;
       let parent: Folder = null;
 
       if (isPresent(folderId)) {
