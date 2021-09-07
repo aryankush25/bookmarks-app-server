@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import urlMetadata from 'url-metadata';
 import { Bookmark } from '../database/entity/Bookmark';
 import { Folder } from '../database/entity/Folder';
+import { Tag } from '../database/entity/Tag';
 import { ArgumentsDoesNotExistError, UserDoesNotExistError } from '../errors';
 import BookmarkRepository from '../repository/BookmarkRepository';
 import FolderRepository from '../repository/FolderRepository';
+import TagRepository from '../repository/TagRepository';
 import { isNilOrEmpty, isPresent } from '../utils/helpers';
 
 export class BookmarkController {
   private bookmarkRepository = new BookmarkRepository();
   private folderRepository = new FolderRepository();
+  private tagRepository = new TagRepository();
 
   async createBookmark(request: Request, response: Response, next: NextFunction) {
     try {
@@ -74,7 +77,7 @@ export class BookmarkController {
 
   async getMyBookmarks(request: Request, response: Response, next: NextFunction) {
     try {
-      const { folderId } = request.body;
+      const { folderId } = request.params;
       let folder: Folder = null;
 
       if (isPresent(folderId)) {
@@ -159,6 +162,49 @@ export class BookmarkController {
         updatedValues: { isFavorite },
       })
     } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getBookmarksFromTag(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { tagId } = request.body;
+
+      const tag: Tag = await this.tagRepository.getTag(tagId);
+
+      if (tag.user.id !== response.locals.user.id) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      if (isNilOrEmpty(tagId)) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      return this.bookmarkRepository.getBookmarksFromTag({
+        where: { user: response.locals.user, tags: tag },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async addTag(request: Request, response: Response, next: NextFunction) {
+    try {
+      const {tagId, bookmarkId} = request.body;
+
+      if (isNilOrEmpty(tagId) || isNilOrEmpty(bookmarkId)) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      const tag: Tag = await this.tagRepository.getTag(tagId);
+
+      if (tag.user.id !== response.locals.user.id) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      return this.bookmarkRepository.addTagToBookmark(tag, bookmarkId);
+
+    } catch(error) {
       return next(error);
     }
   }
