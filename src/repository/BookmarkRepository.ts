@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { v4 } from 'uuid';
 import { Bookmark } from '../database/entity/Bookmark';
 import { Folder } from '../database/entity/Folder';
+import { Tag } from '../database/entity/Tag';
 import { User } from '../database/entity/User';
 
 interface UpdateFolderPayload {
@@ -58,6 +59,22 @@ class FolderRepository {
     await this.bookmarkRepository.save(bookmarkToUpdate);
 
     return bookmarkToUpdate;
+  }
+
+  async getBookmarksFromTag(props: Object = {}, options: Object = {}) {
+    let bookmarks: any = await this.bookmarkRepository.find({ ...props, relations: ['user'] })
+
+    return bookmarks;
+  }
+
+  async addTagToBookmark(tag: Tag, bookmarkId: string) {
+    let bookmark: Bookmark = await this.getBookmark(bookmarkId);
+
+    bookmark.tags.push(tag);
+
+    await this.bookmarkRepository.save(bookmark);
+
+    return bookmark;
   }
 }
 
