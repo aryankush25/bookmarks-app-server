@@ -77,7 +77,7 @@ export class BookmarkController {
 
   async getMyBookmarks(request: Request, response: Response, next: NextFunction) {
     try {
-      const { folderId } = request.query;
+      const { folderId } = request.params;
       let folder: Folder = null;
 
       if (isPresent(folderId)) {
