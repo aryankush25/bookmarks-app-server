@@ -33,7 +33,7 @@ class FolderRepository {
   }
 
   async getFolders(props: Object = {}) {
-    const folders = await this.folderRepository.find({...props, relations: ['bookmark']});
+    const folders = await this.folderRepository.find(props);
 
     return folders;
   }
