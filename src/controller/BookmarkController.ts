@@ -63,9 +63,9 @@ export class BookmarkController {
         throw ArgumentsDoesNotExistError();
       }
 
-      const folderToDelete = await this.bookmarkRepository.getBookmark(bookmarkId);
+      const bookmarkToDelete = await this.bookmarkRepository.getBookmarkWithUser(bookmarkId);
 
-      if (folderToDelete.user.id !== response.locals.user.id) {
+      if (bookmarkToDelete.user.id !== response.locals.user.id) {
         throw ArgumentsDoesNotExistError();
       }
 
