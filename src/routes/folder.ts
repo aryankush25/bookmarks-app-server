@@ -16,6 +16,12 @@ const userRoutes: RoutesPayload[] = [
   },
   {
     method: 'get',
+    route: '/folder',
+    controller: FolderController,
+    action: 'getMyFolder',
+  },
+  {
+    method: 'get',
     route: '/folders',
     controller: FolderController,
     action: 'getMyFolders',

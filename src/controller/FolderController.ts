@@ -79,6 +79,30 @@ export class FolderController {
     }
   }
 
+  async getMyFolder(request: Request, response: Response, next: NextFunction) {
+    try {
+      const { folderId } = request.query;
+
+      if (isNilOrEmpty(folderId)) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      let folder: Folder = await this.folderRepository.getFolder(folderId);
+
+      if (folder.user.id !== response.locals.user.id) {
+        throw ArgumentsDoesNotExistError();
+      }
+
+      folder = await this.folderRepository.getFolder(folderId, {
+        relations: ['parent', 'children'],
+      });
+
+      return folder;
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async renameFolder(request: Request, response: Response, next: NextFunction) {
     try {
       const { folderId, name } = request.body;
