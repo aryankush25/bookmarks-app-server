@@ -3,8 +3,11 @@ const ormConfigs = {
   type: process.env.ORM_CONFIG_TYPE,
   synchronize: JSON.parse(process.env.ORM_CONFIG_SYNCHRONIZE),
   logging: JSON.parse(process.env.ORM_CONFIG_LOGGING),
+  ssl: true,
   extra: {
-    ssl: JSON.parse(process.env.ORM_CONFIG_SSL),
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
 };
 
