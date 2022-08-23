@@ -1,2 +1,2 @@
 release: npm run migrate:only
-web: npm run start
+web: npm run start:build
